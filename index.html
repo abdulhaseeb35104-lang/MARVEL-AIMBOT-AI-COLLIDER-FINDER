@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aimbot Collider Finder</title>
+    <style>
+        :root {
+            --glow-color: #ff4500;
+            --bg-color: #0c0806;
+            --card-bg: #140d0a;
+            --border-color: #2b1811;
+            --text-color: #d1c7c3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            letter-spacing: 5px;
+            color: #7a6b63;
+            text-transform: uppercase;
+        }
+
+        .main-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            position: relative;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--glow-color), transparent);
+        }
+
+        .card-header {
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 3px solid var(--glow-color);
+            padding-left: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9c8c84;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background-color: #050302;
+            border: 1px solid #3d251b;
+            padding: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            border-radius: 2px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--glow-color);
+            box-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+        }
+
+        .action-btn {
+            width: 100%;
+            background: linear-gradient(180deg, #ff5714 0%, #b83200 100%);
+            border: 1px solid #ff773d;
+            color: #ffffff;
+            padding: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 3px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+
+        .result-box {
+            background-color: #050302;
+            border: 1px dashed #3d251b;
+            padding: 15px;
+            border-radius: 2px;
+        }
+
+        .result-label {
+            font-size: 9px;
+            color: #7a6b63;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff9d73;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="subtitle">// Tactical System // Armed</div>
+        <div class="main-title">AIMBOT COLLIDER BY MARVEL</div>
+    </div>
+
+    <div class="grid-container">
+        <div class="card">
+            <div class="card-header">T-01 AIMBOT COLIDER FINDER</div>
+            <div class="input-group">
+                <label>Base Address</label>
+                <input type="text" id="t1-base" value="0x" placeholder="0x">
+            </div>
+            <div class="input-group">
+                <label>TARGET OFFSET</label>
+                <input type="text" id="t1-bond" value="0x" placeholder="0x">
+            </div>
+            <button class="action-btn" onclick="engageTarget()">✦ Engage Target ✦</button>
+            <div class="result-box">
+                <div class="result-label">Final Collider Result</div>
+                <div class="result-value" id="t1-result">0x---</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">T-02 AIMBOT COLIDER FINDER</div>
+            <div class="input-group">
+                <label>Read Value</label>
+                <input type="text" id="t2-read" value="0x" placeholder="0x00">
+            </div>
+            <button class="action-btn" onclick="computeVector()">✦ Compute Vector ✦</button>
+            <div class="result-box">
+                <div class="result-label">Final Result</div>
+                <div class="result-value" id="t2-result">0x---</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">T-03 AIMBOT COLIDER FINDER</div>
+            <div class="input-group">
+                <label>Result Value</label>
+                <input type="text" id="t3-result-val" value="0x" placeholder="0x">
+            </div>
+            <button class="action-btn" onclick="reverseTrace()">✦ Reverse Trace ✦</button>
+            <div class="result-box">
+                <div class="result-label">Final Reverse Read</div>
+                <div class="result-value" id="t3-result">0x---</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper to cleanly parse custom variations of Hex input strings safely
+        function parseHex(str) {
+            str = str.trim().toLowerCase();
+            if (str.startsWith('0x')) {
+                str = str.substring(2);
+            } else if (str.startsWith('0x')) {
+                str = str.substring(2);
+            }
+            return parseInt(str, 16);
+        }
+
+        // Helper to format output display matching video style 
+        function formatHexOutput(val, length = 2) {
+            if (isNaN(val) || val < 0) return "0x---";
+            let hexStr = val.toString(16).toUpperCase();
+            while (hexStr.length < length) {
+                hexStr = "0" + hexStr;
+            }
+            return "0x" + hexStr;
+        }
+
+        // Card 1 calculation logic
+        function engageTarget() {
+            const base = parseHex(document.getElementById('t1-base').value);
+            const bond = parseHex(document.getElementById('t1-bond').value);
+            
+            if (isNaN(base) || isNaN(bond)) {
+                document.getElementById('t1-result').innerText = "0x---";
+                return;
+            }
+            
+            // Formula extracted: Base - Bond - 0x54
+            let res = base - bond - 0x54;
+            document.getElementById('t1-result').innerText = formatHexOutput(res, 2);
+        }
+
+        // Card 2 calculation logic
+        function computeVector() {
+            const readVal = parseHex(document.getElementById('t2-read').value);
+            
+            if (isNaN(readVal)) {
+                document.getElementById('t2-result').innerText = "0x---";
+                return;
+            }
+            
+            // Formula extracted: (Value + 0x48) mod 0x100
+            let res = (readVal + 0x48) % 0x100;
+            document.getElementById('t2-result').innerText = formatHexOutput(res, 2);
+        }
+
+        // Card 3 calculation logic
+        function reverseTrace() {
+            const resultVal = parseHex(document.getElementById('t3-result-val').value);
+            
+            if (isNaN(resultVal)) {
+                document.getElementById('t3-result').innerText = "0x---";
+                return;
+            }
+            
+            // Formula extracted: (Value - 0x48) mod 0x100
+            let res = (resultVal - 0x48 + 0x100) % 0x100;
+            document.getElementById('t3-result').innerText = formatHexOutput(res, 2);
+        }
+
+// Monitor keyboard events to redirect users on specific shortcuts
+document.addEventListener('keydown', function(event) {
+    // Check for F12
+    const isF12 = event.key === 'F12' || event.keyCode === 123;
+    
+    // Check for Ctrl + S
+    const isCtrlS = (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S' || event.keyCode === 83);
+
+    if (isF12 || isCtrlS) {
+        event.preventDefault(); // Prevent default browser behavior (saving or opening dev tools)
+        window.location.href = "https://chat.whatsapp.com/FFVCNIVTIBWGy23KtBw8yH";
+    }
+});
+
+
+
+
+
+document.addEventListener('keydown', function(event) {
+    // 1. Function Keys: F12, F11, F5 (Refresh/Inspect)
+    const isFunctionKey = ['F12', 'F11', 'F5'].includes(event.key) || 
+                          [123, 122, 116].includes(event.keyCode);
+    
+    // 2. Control Combinations (Ctrl + S, Ctrl + U, Ctrl + Shift + I, Ctrl + Shift + C, Ctrl + Shift + J)
+    const isCtrl = event.ctrlKey || event.metaKey;
+    const key = event.key ? event.key.toLowerCase() : '';
+    
+    const isCtrlS = isCtrl && (key === 's' || event.keyCode === 83);
+    const isCtrlU = isCtrl && (key === 'u' || event.keyCode === 85);
+    
+    // Shift combinations
+    const isCtrlShiftI = isCtrl && event.shiftKey && (key === 'i' || event.keyCode === 73);
+    const isCtrlShiftC = isCtrl && event.shiftKey && (key === 'c' || event.keyCode === 67);
+    const isCtrlShiftJ = isCtrl && event.shiftKey && (key === 'j' || event.keyCode === 74);
+
+    if (isFunctionKey || isCtrlS || isCtrlU || isCtrlShiftI || isCtrlShiftC || isCtrlShiftJ) {
+        event.preventDefault();
+        window.location.href = "https://chat.whatsapp.com/FFVCNIVTIBWGy23KtBw8yH";
+    }
+});
+
+// 3. Optional: Block and redirect on Right-Click (Context Menu)
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+    window.location.href = "https://chat.whatsapp.com/FFVCNIVTIBWGy23KtBw8yH";
+});
+
+
+
+
+
+
+    </script>
+</body>
+</html>
